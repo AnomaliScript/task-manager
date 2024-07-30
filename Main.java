@@ -25,25 +25,9 @@ public class Main {
         return scan_input.nextDouble();
     }
 
-    // Task Managing functions (methods)
-
-    // Completing (2)
-    public static void complete(ArrayList<String> taskList, ArrayList<String> completeList, int number) {
-        completeList.add(taskList.get(number));
-        taskList.get(number) += " (Completed!)";
-    }
-
-    // Deleting (3)
-    public static void delete(ArrayList<String> taskList, int number) {
-        taskList.remove(taskList.get(number));
-    }
-
     public static void main(String[] args) {
         Scanner scan;
         scan = new Scanner(System.in);
-
-        String name = input_str("What's ur name?", scan);
-        print(name);
 
         ArrayList<String> tasks = new ArrayList<>();
         ArrayList<String> completedTasks = new ArrayList<>();
@@ -56,7 +40,7 @@ public class Main {
 
         boolean quit = false;
         while(!quit) {
-            for(int i = 0; i < tasks.size(); i++) {
+            for(int i = 0; i < tasks.size() - 1; i++) {
                 print("Task #" + i + ": " + tasks.get(i) + "\n");
             }
             print("--------------------------------------\n");
@@ -77,8 +61,9 @@ public class Main {
                 // Completing a task (uses taskNum)
                 case 2:
                     taskNum = input_int("What is the task you want to delete? ", scan);
-                    completedTasks.add(taskList.get(taskNum));
-                    taskList.get(number) += " (Completed!)";
+                    completedTasks.add(tasks.get(taskNum));
+                    //       index | a "copy" of the task | added string fragment
+                    tasks.set(taskNum, tasks.get(taskNum) + " (Completed!)");
                     break;
                 // Deleting a Task (uses taskNum)
                 case 3:
