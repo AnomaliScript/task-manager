@@ -1,5 +1,5 @@
-import java.util.Scanner;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 
 public class Main {
     // Python
@@ -27,28 +27,15 @@ public class Main {
 
     // Task Managing functions (methods)
 
-    // Adding (1)
-    public static void add(String newItem, String[] list) {
-        list = Arrays.copyOf(list, list.length + 1);
-        list[list.length - 1] = newItem;
-    }
-
     // Completing (2)
-    // scan_complete is only being "transitted" though this function
-    public static void complete(String[] list, int number) {
-        list[number] += " (Completed!)";
-        add(list[number], list);
+    public static void complete(ArrayList<String> taskList, ArrayList<String> completeList, int number) {
+        completeList.add(taskList.get(number));
+        taskList.get(number) += " (Completed!)";
     }
 
     // Deleting (3)
-    public static void delete(String[] list, int number) {
-        list = Arrays.copyOf(list, list.length - 1);
-    }
-    // Viewing Completed (4)
-    public static void view(String[] list) {
-        for(int i = 0; i < list.length; i++) {
-            print("#" + i + ": " + list[i] + "\n");
-        }
+    public static void delete(ArrayList<String> taskList, int number) {
+        taskList.remove(taskList.get(number));
     }
 
     public static void main(String[] args) {
@@ -58,8 +45,8 @@ public class Main {
         String name = input_str("What's ur name?", scan);
         print(name);
 
-        String[] tasks = {};
-        String[] completedTasks = {};
+        ArrayList<String> tasks = new ArrayList<>();
+        ArrayList<String> completedTasks = new ArrayList<>();
 
         print("==================================\n" +
                 "           Task Manager           \n" +
@@ -69,31 +56,51 @@ public class Main {
 
         boolean quit = false;
         while(!quit) {
+            for(int i = 0; i < tasks.size(); i++) {
+                print("Task #" + i + ": " + tasks.get(i) + "\n");
+            }
+            print("--------------------------------------\n");
             int action = input_int("What would you like to do?\n" +
                     "1) Add a Task\n" +
                     "2) Complete a Task\n" +
                     "3) Delete a Task\n" +
-                    "4) See Completed Tasks\n", scan);
+                    "4) See Completed Tasks\n" +
+                    "5) Quit\n", scan);
 
+            int taskNum = 0;
             switch(action) {
-                // Adding a task
+                // Adding a task (doesn't use taskNum)
                 case 1:
-                    String newTask = input_str("What task would you like to add? ", scan);
-                    add()
+                    String task = input_str("What is the name of the task you want to add?\n", scan);
+                    tasks.add(task);
                     break;
-                // Completing a task
+                // Completing a task (uses taskNum)
                 case 2:
-                    complete()
+                    taskNum = input_int("What is the task you want to delete? ", scan);
+                    completedTasks.add(taskList.get(taskNum));
+                    taskList.get(number) += " (Completed!)";
                     break;
-                // Deleting a Task
+                // Deleting a Task (uses taskNum)
                 case 3:
-
+                    taskNum = input_int("What is the task you want to delete? ", scan);
+                    tasks.remove(tasks.get(taskNum));
                     break;
-                // Completed Tasks
+                // Completed Tasks (doesn't use taskNum)
                 case 4:
-                    view(completedTasks);
+                    for(int i = 0; i < completedTasks.size(); i++) {
+                        print("#" + i + ": " + completedTasks.get(i) + "\n");
+                    }
                     break;
+                // Quitting
+                case 5:
+                    String answer = input_str("Are you sure? All of your tasks will be lost! (y/n)", scan);
+                    if(answer == "y") {
+                        quit = true;
+                    } else {
+                        break;
+                    }
             }
+            print("\n");
         }
     }
 }
