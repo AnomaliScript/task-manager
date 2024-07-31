@@ -18,12 +18,6 @@ public class Main {
         return scanParam.nextInt();
     }
 
-    // Double Input
-    public static double input_double(String prompter, Scanner scanParam) {
-        print(prompter);
-        return scanParam.nextDouble();
-    }
-
     public static void main(String[] args) {
         Scanner scanStr, scanInt;
         scanStr = new Scanner(System.in);
@@ -32,85 +26,102 @@ public class Main {
         ArrayList<String> tasks = new ArrayList<>();
         ArrayList<String> completedTasks = new ArrayList<>();
 
-        print("==================================\n" +
-                "           Task Manager           \n" +
-                "           Version 1.0            \n" +
-                " All rights reserved (not really) \n" +
-                "==================================\n\n");
+        print("+================================+\n|          Task Manager          |\n|          Version 2.0           |\n|    All rights (not) reserved   |\n+================================+\n\n");
 
         boolean quit = false;
-        boolean start = true;
+        boolean spacer = false;
         while(!quit) {
             // Cosmetic stuff
-            if (!start) {
+            if (spacer) {
                 print("\n\n\n\n\n");
             }
-            start = false;
+            spacer = true;
 
             print("Tasks:\n");
             if (tasks.size() == 0) {
                 print("No tasks rn, hooray!\n");
             }
             for(int i = 0; i < tasks.size(); i++) {
-                print("Task #" + Integer.toString(i + 1) + ": " + tasks.get(i) + "\n");
+                print("Task #" + (i + 1) + ": " + tasks.get(i) + "\n");
             }
             print("--------------------------------------\n");
-            int action = input_int("What would you like to do?\n" +
-                    "1) Add a Task\n" +
-                    "2) Complete a Task\n" +
-                    "3) Delete a Task\n" +
-                    "4) See Completed Tasks\n" +
-                    "5) Quit\n", scanInt);
+            // Random number
+            int action = 42;
+            try {
+                action = input_int("What would you like to do?\n1) Add a Task\n2) Complete a Task\n3) Delete a Task\n4) Inspect a Task\n5) See Completed Tasks\n6) Quit", scanInt);
+            } catch(Exception e) {
+                print("That's not a valid actionID!");
+            }
+
 
             // Used for completing and deleting tasks
-            int taskNum = 0;
+            String taskStr;
+            int taskNum;
 
-            switch(action) {
+            switch (action) {
                 // Adding a task (doesn't use taskNum)
-                case 1:
-                    String task = input_str("What is the name of the task you want to add?\n", scanStr);
+                case 1 -> {
+                    String task = input_str("What is the name of the task you want to add? (type \"back\" to go back)\n", scanStr);
+                    if (task.equals("back")) {
+                        break;
+                    }
                     tasks.add(task);
-                    break;
+                }
                 // Completing a task (uses taskNum)
-                case 2:
+                case 2 -> {
+                    taskStr = input_str("What task you want to mark as completed? (type \"back\" to go back)\n", scanStr);
+                    if (taskStr.equals("back")) {
+                        break;
+                    }
                     try {
-                        taskNum = input_int("What is the task you want to complete? ", scanInt);
+                        taskNum = Integer.parseInt(taskStr);
                         // normal number to index number
                         taskNum--;
                         completedTasks.add(tasks.get(taskNum));
                         //       index | a "copy" of the task | added string fragment
                         tasks.set(taskNum, tasks.get(taskNum) + " (Completed!)");
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         print("That's not a valid taskID!");
                     }
-                    break;
+                }
                 // Deleting a Task (uses taskNum)
-                case 3:
-                    taskNum = input_int("What is the task you want to delete? ", scanInt);
-                    try {
-                        tasks.remove(tasks.get(taskNum));
-                    } catch(Exception e) {
-                        print("That's not a valid taskID!");
+                case 3 -> {
+                    taskStr = input_str("What task you want to delete? (type \"back\" to go back)\n", scanStr);
+                    if (taskStr.equals("back")) {
+                        break;
                     }
-                    break;
+                    try {
+                        taskNum = Integer.parseInt(taskStr);
+                        // normal number to index number
+                        taskNum--;
+                        tasks.remove(tasks.get(taskNum));
+                    } catch (Exception e) {
+                        print("That's not a valid taskID!\n");
+                    }
+                }
+                // Inspecting tasks
+                case 4 -> {
+
+                }
                 // Completed Tasks (doesn't use taskNum)
-                case 4:
+                case 5 -> {
                     print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                     print("Completed Tasks: \n");
-                    for(int i = 0; i < completedTasks.size(); i++) {
+                    for (int i = 0; i < completedTasks.size(); i++) {
                         print("#" + (i + 1) + ": " + completedTasks.get(i) + "\n");
                     }
-                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                    break;
+                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                    spacer = false;
+                }
                 // Quitting
-                case 5:
+                case 6 -> {
                     String answer = input_str("Are you sure? All of your tasks will be lost! (y/n)", scanStr);
-                    if(answer.equals("y") || answer.equals("ye") || answer.equals("yes")) {
+                    if (answer.equals("y") || answer.equals("ye") || answer.equals("yes")) {
                         quit = true;
                     }
-                    break;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
             print("\n");
         }
