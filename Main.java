@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.*;
 
 public class Main {
@@ -8,26 +7,27 @@ public class Main {
     }
 
     // String Input
-    public static String input_str(String prompter, Scanner scan_input) {
+    public static String input_str(String prompter, Scanner scanParam) {
         print(prompter);
-        return scan_input.nextLine();
+        return scanParam.nextLine();
     }
 
     // Integer Input
-    public static int input_int(String prompter, Scanner scan_input) {
+    public static int input_int(String prompter, Scanner scanParam) {
         print(prompter);
-        return scan_input.nextInt();
+        return scanParam.nextInt();
     }
 
     // Double Input
-    public static double input_double(String prompter, Scanner scan_input) {
+    public static double input_double(String prompter, Scanner scanParam) {
         print(prompter);
-        return scan_input.nextDouble();
+        return scanParam.nextDouble();
     }
 
     public static void main(String[] args) {
-        Scanner scan;
-        scan = new Scanner(System.in);
+        Scanner scanStr, scanInt;
+        scanStr = new Scanner(System.in);
+        scanInt = new Scanner(System.in);
 
         ArrayList<String> tasks = new ArrayList<>();
         ArrayList<String> completedTasks = new ArrayList<>();
@@ -36,12 +36,23 @@ public class Main {
                 "           Task Manager           \n" +
                 "           Version 1.0            \n" +
                 " All rights reserved (not really) \n" +
-                "==================================\n");
+                "==================================\n\n");
 
         boolean quit = false;
+        boolean start = true;
         while(!quit) {
-            for(int i = 0; i < tasks.size() - 1; i++) {
-                print("Task #" + i + ": " + tasks.get(i) + "\n");
+            // Cosmetic stuff
+            if (!start) {
+                print("\n\n\n\n\n");
+            }
+            start = false;
+
+            print("Tasks:\n");
+            if (tasks.size() == 0) {
+                print("No tasks rn, hooray!\n");
+            }
+            for(int i = 0; i < tasks.size(); i++) {
+                print("Task #" + Integer.toString(i + 1) + ": " + tasks.get(i) + "\n");
             }
             print("--------------------------------------\n");
             int action = input_int("What would you like to do?\n" +
@@ -49,41 +60,57 @@ public class Main {
                     "2) Complete a Task\n" +
                     "3) Delete a Task\n" +
                     "4) See Completed Tasks\n" +
-                    "5) Quit\n", scan);
+                    "5) Quit\n", scanInt);
 
+            // Used for completing and deleting tasks
             int taskNum = 0;
+
             switch(action) {
                 // Adding a task (doesn't use taskNum)
                 case 1:
-                    String task = input_str("What is the name of the task you want to add?\n", scan);
+                    String task = input_str("What is the name of the task you want to add?\n", scanStr);
                     tasks.add(task);
                     break;
                 // Completing a task (uses taskNum)
                 case 2:
-                    taskNum = input_int("What is the task you want to delete? ", scan);
-                    completedTasks.add(tasks.get(taskNum));
-                    //       index | a "copy" of the task | added string fragment
-                    tasks.set(taskNum, tasks.get(taskNum) + " (Completed!)");
+                    try {
+                        taskNum = input_int("What is the task you want to complete? ", scanInt);
+                        // normal number to index number
+                        taskNum--;
+                        completedTasks.add(tasks.get(taskNum));
+                        //       index | a "copy" of the task | added string fragment
+                        tasks.set(taskNum, tasks.get(taskNum) + " (Completed!)");
+                    } catch(Exception e) {
+                        print("That's not a valid taskID!");
+                    }
                     break;
                 // Deleting a Task (uses taskNum)
                 case 3:
-                    taskNum = input_int("What is the task you want to delete? ", scan);
-                    tasks.remove(tasks.get(taskNum));
+                    taskNum = input_int("What is the task you want to delete? ", scanInt);
+                    try {
+                        tasks.remove(tasks.get(taskNum));
+                    } catch(Exception e) {
+                        print("That's not a valid taskID!");
+                    }
                     break;
                 // Completed Tasks (doesn't use taskNum)
                 case 4:
+                    print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                    print("Completed Tasks: \n");
                     for(int i = 0; i < completedTasks.size(); i++) {
-                        print("#" + i + ": " + completedTasks.get(i) + "\n");
+                        print("#" + (i + 1) + ": " + completedTasks.get(i) + "\n");
                     }
+                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                     break;
                 // Quitting
                 case 5:
-                    String answer = input_str("Are you sure? All of your tasks will be lost! (y/n)", scan);
-                    if(answer == "y") {
+                    String answer = input_str("Are you sure? All of your tasks will be lost! (y/n)", scanStr);
+                    if(answer.equals("y") || answer.equals("ye") || answer.equals("yes")) {
                         quit = true;
-                    } else {
-                        break;
                     }
+                    break;
+                default:
+                    break;
             }
             print("\n");
         }
