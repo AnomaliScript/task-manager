@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.Arrays;
 
 public class Main {
     // Python
@@ -7,27 +6,26 @@ public class Main {
         System.out.print(string);
     }
 
+    private static final Scanner scanStr = new Scanner(System.in);
+    private static final Scanner scanInt = new Scanner(System.in);
+    private static final Scanner scanDouble = new Scanner(System.in);
+    
     // String Input
     public static String input_str(String prompter) {
         print(prompter);
-        Scanner scanStr;
-        scanStr = new Scanner(System.in);
-        return scanStr.nextLine();
+        String string = scanStr.nextLine();
+        return string;
     }
 
     // Integer Input
     public static int input_int(String prompter) {
         print(prompter);
-        Scanner scanInt;
-        scanInt = new Scanner(System.in);
         return scanInt.nextInt();
     }
 
     // Double Input
     public static double input_double(String prompter) {
         print(prompter);
-        Scanner scanDouble;
-        scanDouble = new Scanner(System.in);
         return scanDouble.nextDouble();
     }
 
@@ -80,7 +78,12 @@ public class Main {
                     String taskPeopleRaw = input_str("Who are the people responsible? (type only their first names, with only a space separating the names)\n");
                     ArrayList<String> taskPeople = new ArrayList<>(Arrays.asList(taskPeopleRaw.split(" ")));
                     // duration
-                    double taskDuration = input_double("About how long would the task take? (in hours)\n");
+                    double taskDuration = 0.0;
+                    try {
+                        taskDuration = input_double("About how long would the task take? (in hours and in a decimal)\n");
+                    } catch (Exception e) {
+                        print("That's not a valid time duration!");
+                    }
                     // dueDate
                     String taskDueDate = input_str("What should the due date of the task be?\n");
                     Task task = new Task(taskName, taskPeople, taskDuration, taskDueDate, "Not Completed");
@@ -146,12 +149,16 @@ public class Main {
                         print("That's not a valid taskID!\n");
                     }
                 }
-                // Completed Tasks (doesn't use taskNum)
+                // Viewing Completed Tasks (doesn't use taskNum)
                 case 5 -> {
                     print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                     print("Completed Tasks: \n");
-                    for (int i = 0; i < completedTasks.size(); i++) {
-                        print("#" + (i + 1) + ": " + completedTasks.get(i).name + "\n");
+                    if (completedTasks.size() == 0) {
+                        print("Nothing here yet\n*zzzZZzZzZzzzZzZZZzzzzz.....*");
+                    } else {
+                        for (int i = 0; i < completedTasks.size(); i++) {
+                            print("#" + (i + 1) + ": " + completedTasks.get(i).name + "\n");
+                        }
                     }
                     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                     spacer = false;
@@ -168,5 +175,8 @@ public class Main {
             }
             print("\n");
         }
+        scanStr.close();
+        scanInt.close();
+        scanDouble.close();
     }
 }

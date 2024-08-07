@@ -1,19 +1,25 @@
+import java.util.ArrayList;
+
 public class Task {
     public String name;
-    public String[] people;
+    public ArrayList<String> people;
     public double duration;
-    public int dueDate;
-
-    // Default constructor ¯\_(ツ)_/¯
-    public Task() {}
+    public String dueDate;
+    public String state;
 
     // Manual constructor
-    public Task(String name, String[] people, double duration, int dueDate) {
+    public Task(String name, ArrayList<String> people, double duration, String taskDueDate, String state) {
         // Default constructor calling ¯\_(ツ)_/¯
-        this();
         this.name = name;
         this.people = people;
         this.duration = duration;
-        this.dueDate = dueDate;
+        this.dueDate = taskDueDate;
+        this.state = state;
+    }
+
+    // Complete function
+    public void Complete() {
+        this.name = this.name + " (Completed!)";
+        this.state = "Completed";
     }
 }
