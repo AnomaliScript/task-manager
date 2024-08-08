@@ -34,7 +34,7 @@ public class Main {
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> completedTasks = new ArrayList<>();
 
-        print("+================================+\n|          Task Manager          |\n|          Version 2.0           |\n|    All rights (not) reserved   |\n+================================+\n\n");
+        print("+================================+\n|          Task Manager          |\n|          Version 2.2           |\n|    All rights (not) reserved   |\n+================================+\n\n");
 
         boolean quit = false;
         boolean spacer = false;
@@ -53,10 +53,10 @@ public class Main {
                 print("Task #" + (i + 1) + ": " + tasks.get(i).name + "\n");
             }
             print("--------------------------------------\n");
-            // Random number (doesn't matter because it will be replaced
+            // Random number (doesn't matter because it will be replaced)
             int action = 42;
             try {
-                action = input_int("What would you like to do?\n1) Add a Task\n2) Complete a Task\n3) Delete a Task\n4) Inspect a Task\n5) See Completed Tasks\n6) Quit\n");
+                action = input_int("What would you like to do?\n1) Add a Task\n2) Complete a Task\n3) Delete a Task\n4) Inspect a Task\n5) Edit a Task\n6) See Completed Tasks\n7) Quit\n");
             } catch(Exception e) {
                 print("That's not a valid actionID!");
             }
@@ -149,8 +149,77 @@ public class Main {
                         print("That's not a valid taskID!\n");
                     }
                 }
-                // Viewing Completed Tasks (doesn't use taskNum)
+                // Editing a Task (uses taskNum)
                 case 5 -> {
+                    taskStr = input_str("What task you want to inspect? (type \"back\" to go back)\n");
+                    if (taskStr.equals("back")) {
+                        break;
+                    }
+                    try {
+                        taskNum = Integer.parseInt(taskStr);
+                        // normal number to index number
+                        taskNum--;
+                        Task task = tasks.get(taskNum);
+                        String opposite = "";
+                        if ((task.state).equals("Completed")) {
+                            opposite = "Not Completed";
+                        }
+                        boolean moreChanges = true;
+                        while (moreChanges) {
+                            int editAction = input_int("Which part of the task do you want to edit?\n" + 
+                                                    "1) Task Name\n" +
+                                                    "2) People Responsible\n" +
+                                                    "3) Duration\n" +
+                                                    "4) Deadline\n" +
+                                                    "5) Status (will automatically switch from " + task.state + " to " + opposite + " )\n" +
+                                                    "6) help help get me out of here (goes back to main menu)\n"
+                            );
+                            switch (editAction) {
+                                case 1 -> {
+                                    task.name = input_str("What name would you like to give the task?\n");
+                                    break;
+                                }
+                                case 2 -> {
+                                    String taskPeopleRawEdited = input_str("Who are the people responsible? (type only their first names, with only a space separating the names)\n");
+                                    task.people = new ArrayList<>(Arrays.asList(taskPeopleRawEdited.split(" ")));
+                                    break;
+                                }
+                                case 3 -> {
+                                    try {
+                                        task.duration = input_double("About how long would the task take? (in hours and in a decimal)\n");
+                                    } catch (Exception e) {
+                                        print("That's not a valid time duration!");
+                                    }
+                                    break;
+                                }
+                                case 4 -> {
+                                    task.dueDate = input_str("What should the due date of the task be?\n");
+                                    break;
+                                }
+                                case 5 -> {
+                                    if ((task.state).equals("Completed")) {
+                                        task.state = "Not Completed";
+                                        // Remove from completed list
+                                    } else {
+                                        task.state = "Completed";
+                                    }
+                                    break;
+                                }
+                                case 6 -> {
+                                    moreChanges = false;
+                                    break;
+                                }
+                                default -> {
+                                    print("That's not a valid editID!\n");
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        print("That's not a valid taskID!\n");
+                    }
+                }
+                // Viewing Completed Tasks (doesn't use taskNum)
+                case 6 -> {
                     print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                     print("Completed Tasks: \n");
                     if (completedTasks.size() == 0) {
@@ -164,7 +233,7 @@ public class Main {
                     spacer = false;
                 }
                 // Quitting
-                case 6 -> {
+                case 7 -> {
                     String answer = input_str("Are you sure? All of your tasks will be lost! (y/n)");
                     if (answer.equals("y") || answer.equals("ye") || answer.equals("yes")) {
                         quit = true;
