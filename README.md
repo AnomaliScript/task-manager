@@ -8,3 +8,6 @@ Unfortunately, I haven't created a good/user-friendly UI for the common people t
 ## Images and Videos
 ![image](https://github.com/user-attachments/assets/66a109e0-a407-426a-9049-2965aa987d83)
 Video (of me using the manager): https://github.com/user-attachments/assets/b8e96e56-b3bd-422a-a994-f907bcfcb1d9
+
+## How to install and use the program
+https://code.visualstudio.com/docs/java/java-tutorial
